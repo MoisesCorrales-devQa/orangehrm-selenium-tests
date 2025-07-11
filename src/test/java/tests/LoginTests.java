@@ -7,10 +7,8 @@ import io.qameta.allure.Story;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import pages.DashboardPage;
-import pages.LoginPage;
+import pageObjects.DashboardPage;
+import pageObjects.LoginPage;
 import utils.BaseTest;
 import utils.TestProperties;
 
@@ -20,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Feature("Autenticación")
 public class LoginTests extends BaseTest {
 
-    private static final Logger log = LoggerFactory.getLogger(LoginTests.class);
     private LoginPage loginPage;
     private DashboardPage dashboardPage;
 

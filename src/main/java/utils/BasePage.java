@@ -5,7 +5,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
-public class BasePage {
+public abstract class BasePage {
 
     protected WebDriver driver;
 
@@ -22,11 +22,49 @@ public class BasePage {
         VisualHelper.pause(1000);
     }
 
+    public void clickInsideParent(WebElement parent, By locator) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement element = wait.until(driver -> {
+            try {
+                WebElement child = parent.findElement(locator);
+                return (child.isDisplayed() && child.isEnabled()) ? child : null;
+            } catch (Exception e) {
+                return null;
+            }
+        });
+
+        VisualHelper.highlight(driver, element);
+        element.click();
+        VisualHelper.pause(1000);
+    }
+
     public boolean isVisible(By locator, int timeoutSeconds) {
         try {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
             WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
             return element.isDisplayed();
+        } catch (TimeoutException | NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public boolean isVisibleInsideParent(WebElement parent, By locator, int timeoutSeconds) {
+        try {
+
+            VisualHelper.highlight(driver, parent);
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
+
+            WebElement element = wait.until(ExpectedConditions.visibilityOf(
+                    parent.findElement(locator)
+            ));
+
+            VisualHelper.highlight(driver, element);
+            VisualHelper.pause(1000);
+
+            System.out.println(element);
+            System.out.println(element.isDisplayed());
+            return element.isDisplayed();
+
         } catch (TimeoutException | NoSuchElementException e) {
             return false;
         }
@@ -77,6 +115,26 @@ public class BasePage {
         boolean isTittleDisplayed = isVisibleWithText(selector, tittleText, 10);
 
         return isUrlValidated && isTittleDisplayed;
+    }
+
+    public void scrollBy(int pixels) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollBy(0, arguments[0]);", pixels);
+    }
+
+    public void scrollByHorizontal(int pixels) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollBy(arguments[0], 0);", pixels);
+    }
+
+    public void scrollToBottom() {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+    }
+
+    public void scrollToTop() {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollTo(0, 0);");
     }
 
 
