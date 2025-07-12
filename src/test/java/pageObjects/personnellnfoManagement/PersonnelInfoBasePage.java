@@ -27,8 +27,14 @@ public abstract class PersonnelInfoBasePage extends BasePage {
         click(optionalFields);
     }
 
+    public void goToCustomFields() {
+        click(customFields);
+    }
+
     public void clickEmployeeListButton() {
         click(employeeListButton);
     }
+
+
 
 }

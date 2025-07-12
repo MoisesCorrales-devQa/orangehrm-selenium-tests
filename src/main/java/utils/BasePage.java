@@ -24,6 +24,7 @@ public abstract class BasePage {
 
     public void clickInsideParent(WebElement parent, By locator) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        VisualHelper.highlight(driver, parent);
         WebElement element = wait.until(driver -> {
             try {
                 WebElement child = parent.findElement(locator);
@@ -61,8 +62,6 @@ public abstract class BasePage {
             VisualHelper.highlight(driver, element);
             VisualHelper.pause(1000);
 
-            System.out.println(element);
-            System.out.println(element.isDisplayed());
             return element.isDisplayed();
 
         } catch (TimeoutException | NoSuchElementException e) {
@@ -137,5 +136,25 @@ public abstract class BasePage {
         js.executeScript("window.scrollTo(0, 0);");
     }
 
+    public void sendKeysFromParent(WebElement parentElement,  By childLocator, String text) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
+        VisualHelper.highlight(driver, parentElement);
+
+        WebElement element = wait.until(ExpectedConditions.visibilityOf(
+                parentElement.findElement(childLocator)
+        ));
+        element.click();
+        element.sendKeys(Keys.CONTROL + "a");
+        element.sendKeys(Keys.DELETE);
+        element.sendKeys(text);
+    }
+
+    public void selectFromDropdown(By groupSelector, By dropDownSelector, By optionSelector) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement parentElement = wait.until(ExpectedConditions.visibilityOfElementLocated(groupSelector));
+        clickInsideParent(parentElement, dropDownSelector);
+
+        click(optionSelector);
+    }
 }

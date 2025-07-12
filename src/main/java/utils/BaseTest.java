@@ -3,9 +3,8 @@ package utils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
-import utils.BrowserInfo;
-import utils.*;
 
+@TestMethodOrder(MethodOrderer.MethodName.class)
 @ExtendWith(ScreenshotOnFailureExtension.class)
 public abstract class BaseTest {
 
